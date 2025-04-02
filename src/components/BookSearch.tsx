@@ -43,7 +43,6 @@ const BookSearch: React.FC = () => {
     const [searchResults, setSearchResults] = useState<Book[]>([]);
     const [loading, setLoading] = useState<boolean>(false);
     const [error, setError] = useState<string | null>(null);
-    const [selectedBooks, setSelectedBooks] = useState<string[]>([]);
     const [totalResults, setTotalResults] = useState<number>(0);
     const [advancedFilters, setAdvancedFilters] = useState<AdvancedFilters>({
         author: '',
@@ -231,9 +230,8 @@ const BookSearch: React.FC = () => {
             setTotalResults(
                 filters.availability === 'all' ? data.numFound : processedResults.length
             );
-        } catch (err: any) {
+        } catch (err: unknown) {
             console.error('Error searching books:', err);
-            setError(err.message);
             setSearchResults([]);
         } finally {
             setLoading(false);
@@ -439,9 +437,9 @@ const BookSearch: React.FC = () => {
                             <div className="mb-4 flex flex-col sm:flex-row sm:items-center justify-between">
                                 <p className="text-indigo-700 font-medium mb-2 sm:mb-0">
                                     Found <span className="font-bold">{totalResults.toLocaleString()}</span> books
-                                    {searchQuery && <span> matching "<strong>{searchQuery}</strong>"</span>}
-                                    {advancedFilters.availability === 'preview' && <span> with <strong>previews</strong></span>}
-                                    {advancedFilters.availability === 'fulltext' && <span> with <strong>full text</strong></span>}
+                                    {searchQuery && <span> matching <span className="font-bold">{searchQuery}</span></span>}
+                                    {advancedFilters.availability === 'preview' && <span> with <span className="font-bold">previews</span></span>}
+                                    {advancedFilters.availability === 'fulltext' && <span> with <span className="font-bold">full text</span></span>}
                                 </p>
 
                             </div>
@@ -450,9 +448,7 @@ const BookSearch: React.FC = () => {
                                 {searchResults.map(book => (
                                     <div
                                         key={book.id}
-                                        className={`p-4 rounded-xl border transition-all ${selectedBooks.includes(book.id)
-                                            ? 'border-indigo-400 bg-indigo-50 shadow-md'
-                                            : 'border-gray-200 bg-white hover:border-indigo-200 hover:shadow-sm'
+                                        className={`p-4 rounded-xl border transition-allborder-gray-200 bg-white hover:border-indigo-200 hover:shadow-sm
                                             }`}
                                     >
                                         <div className="flex items-start">
@@ -580,13 +576,13 @@ const BookSearch: React.FC = () => {
                                 }
                             </p>
                             <p className="text-indigo-600 font-medium max-w-xl mx-auto mb-8">
-                                Now with book previews and full-text availability! Use the "Availability" filter to find readable books.
+                                Now with book previews and full-text availability! Use the <span className="font-medium">Availability</span> filter to find readable books.
                             </p>
 
                             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 max-w-3xl mx-auto text-left">
                                 <div className="p-4 border border-indigo-100 rounded-lg bg-white">
                                     <h4 className="font-medium text-indigo-800 mb-1">Search by Title</h4>
-                                    <p className="text-sm text-gray-600">Enter book titles like "Lord of the Rings" or "Pride and Prejudice"</p>
+                                    <p className="text-sm text-gray-600">Enter book titles like <span className="italic">Lord of the Rings</span> or <span className="italic">Pride and Prejudice</span></p>
                                 </div>
                                 <div className="p-4 border border-indigo-100 rounded-lg bg-white">
                                     <h4 className="font-medium text-indigo-800 mb-1">Search by Author</h4>
@@ -594,7 +590,7 @@ const BookSearch: React.FC = () => {
                                 </div>
                                 <div className="p-4 border border-indigo-100 rounded-lg bg-white">
                                     <h4 className="font-medium text-indigo-800 mb-1">Filter by Subject</h4>
-                                    <p className="text-sm text-gray-600">Narrow your search with subjects like "fantasy" or "biography"</p>
+                                    <p className="text-sm text-gray-600">Narrow your search with subjects like <span className="italic">fantasy</span> or <span className="italic">biography</span></p>
                                 </div>
                             </div>
 
@@ -608,7 +604,7 @@ const BookSearch: React.FC = () => {
                                             <h4 className="font-medium text-blue-800 mb-1">Book Previews</h4>
                                             <p className="text-sm text-blue-700">
                                                 Many books offer preview sections that you can read online before purchasing or borrowing.
-                                                Look for the "Preview" badge on search results.
+                                                Look for the <span className="font-medium">Preview</span> badge on search results.
                                             </p>
                                         </div>
                                     </div>
@@ -637,7 +633,7 @@ const BookSearch: React.FC = () => {
                 <BookPreviewModal
                     previewBook={previewBook}
                     showPreview={showPreview}
-                    closePreview={() => setShowPreview(false)}
+                    closePreview={closePreview}
                     getEmbeddedPreviewUrl={(book) => getEmbeddedPreviewUrl(book)}
                 />
             )}
