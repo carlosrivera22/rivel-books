@@ -52,7 +52,7 @@ const BookSearch: React.FC = () => {
     });
     const [showFilters, setShowFilters] = useState<boolean>(false);
     const [debouncedSearchTerm, setDebouncedSearchTerm] = useState<string>('');
-    const [searchMode, setSearchMode] = useState<'button' | 'debounce'>('button'); // 'button' or 'debounce'
+    const searchMode = 'debounce'; // 'button' or 'debounce'
     const [previewBook, setPreviewBook] = useState<Book | null>(null); // For the preview modal
     const [showPreview, setShowPreview] = useState<boolean>(false);
     const previewModalRef = useRef<HTMLDivElement | null>(null);
@@ -269,10 +269,6 @@ const BookSearch: React.FC = () => {
         setPreviewBook(null);
     };
 
-    const toggleSearchMode = () => {
-        setSearchMode(prevMode => prevMode === 'button' ? 'debounce' : 'button');
-    };
-
     const handleFilterChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         const { name, value } = e.target;
         setAdvancedFilters(prev => ({
@@ -318,15 +314,6 @@ const BookSearch: React.FC = () => {
                         </h2>
                         <div className="mt-4 md:mt-0 flex space-x-3">
                             <button
-                                onClick={toggleSearchMode}
-                                className={`px-4 py-2 rounded-full text-sm flex items-center transition-colors ${searchMode === 'debounce'
-                                    ? 'bg-indigo-500 text-white'
-                                    : 'bg-indigo-50 text-indigo-700 hover:bg-indigo-100'
-                                    }`}
-                            >
-                                <span>{searchMode === 'debounce' ? 'Auto Search' : 'Manual Search'}</span>
-                            </button>
-                            <button
                                 onClick={() => setShowFilters(!showFilters)}
                                 className="px-4 py-2 bg-indigo-50 rounded-full text-sm text-indigo-700 flex items-center hover:bg-indigo-100 transition-colors"
                             >
@@ -357,7 +344,7 @@ const BookSearch: React.FC = () => {
                                 )}
                                 <button
                                     type="submit"
-                                    className={`p-1 hover:bg-indigo-100 rounded-full ${searchMode === 'button' ? '' : 'opacity-50'}`}
+                                    className={`p-1 hover:bg-indigo-100 rounded-full opacity-50`}
                                     disabled={searchMode === 'debounce'}
                                     title={searchMode === 'debounce' ? "Auto-search is enabled" : "Search"}
                                 >
@@ -449,7 +436,7 @@ const BookSearch: React.FC = () => {
                                     <div
                                         key={book.id}
                                         className={`p-4 rounded-xl border transition-allborder-gray-200 bg-white hover:border-indigo-200 hover:shadow-sm
-                                            }`}
+                                    }`}
                                     >
                                         <div className="flex items-start">
                                             <div className="flex-shrink-0 mr-4">
@@ -467,21 +454,6 @@ const BookSearch: React.FC = () => {
                                             </div>
 
                                             <div className="flex-1">
-                                                <div className="flex items-start justify-between">
-                                                    <h3 className="text-lg font-semibold text-indigo-900">{book.title}</h3>
-                                                    <div className="flex items-center space-x-2">
-                                                        {book.previewAvailable && (
-                                                            <span className="px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded-full">
-                                                                Preview
-                                                            </span>
-                                                        )}
-                                                        {book.hasFulltext && (
-                                                            <span className="px-2 py-1 bg-green-100 text-green-800 text-xs rounded-full">
-                                                                Full Text
-                                                            </span>
-                                                        )}
-                                                    </div>
-                                                </div>
 
                                                 <div className="mt-1 flex flex-wrap items-center text-sm text-gray-600">
                                                     <span className="flex items-center mr-4 mb-1">
@@ -498,16 +470,6 @@ const BookSearch: React.FC = () => {
                                                     </span>
                                                 </div>
 
-                                                <div className="mt-3 flex flex-wrap items-center gap-2">
-                                                    {book.languages.map((lang, i) => (
-                                                        <span
-                                                            key={i}
-                                                            className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-indigo-100 text-indigo-800"
-                                                        >
-                                                            {lang}
-                                                        </span>
-                                                    ))}
-                                                </div>
 
                                                 <div className="mt-3 flex flex-wrap items-center gap-2">
                                                     {book.previewAvailable && book.previewUrl && (
